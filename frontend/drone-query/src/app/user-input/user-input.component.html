@@ -1,1 +1,13 @@
-<h1>Hello World!</h1>>
+<mat-card class="input-card">
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Your Query</mat-label>
+        <input matInput [(ngModel)]="userInput" placeholder="Type your message here..." />
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" (click)="submitQuery()" class="submit-button">
+        Send
+      </button>
+    </mat-card-content>
+  </mat-card>
+  

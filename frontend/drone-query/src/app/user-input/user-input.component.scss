@@ -1,0 +1,18 @@
+.input-card {
+    max-width: 600px; // Set the width 
+    margin: 20px auto; // Center the card
+    padding: 20px;
+    border-radius: 16px; // Rounded corners
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .full-width {
+    width: 100%; // Make the input take the full width of the card
+  }
+  
+  .submit-button {
+    margin-top: 16px; // Add space above the button
+    float: right; // Align button to the right
+  }
+
+  
