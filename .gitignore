@@ -1,0 +1,39 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+out/
+
+# React specific files
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+*.log
+
+# TypeScript specific files
+*.tsbuildinfo
+
+# Python specific files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+
+# FastAPI dependencies (if using virtualenv)
+venv/
+env/
+
+# Miscellaneous
+.DS_Store            # macOS specific
+Thumbs.db            # Windows specific
+.idea/               # JetBrains project files
+.vscode/             # VS Code project files
+coverage/            # Coverage reports from testing
+*.bak                # Backup files
+*.tmp                # Temporary files
+*.zip                # Archive files
