@@ -11,30 +11,27 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="response-card" *ngIf="responseData.length">
+<!-- Add a card to display the response from the API -->
+<mat-card class="response-card" *ngIf="responseData">
   <mat-card-title>AI Response</mat-card-title>
   <mat-card-content>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Filter</mat-label>
-      <input matInput [(ngModel)]="filterCriteria" (ngModelChange)="filterData()" placeholder="Filter data..." />
-    </mat-form-field>
-
-    <table mat-table [dataSource]="filteredData">
-      <!-- Define your columns here based on your data structure -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="altitude">
-        <th mat-header-cell *matHeaderCellDef> Altitude </th>
-        <td mat-cell *matCellDef="let element"> {{element.altitude}} </td>
-      </ng-container>
-
-      <!-- Add other columns as necessary -->
-
-      <tr mat-header-row *matHeaderRowDef="['name', 'altitude']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'altitude'];"></tr>
+    <!-- Assuming the response is a simple text -->
+    <p>{{ responseData?.response }}</p>
+    
+    <!-- If the response contains more structured data, use a table -->
+    <table *ngIf="responseData?.data" class="response-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of responseData?.data">
+          <td>{{ item.attribute }}</td>
+          <td>{{ item.value }}</td>
+        </tr>
+      </tbody>
     </table>
   </mat-card-content>
 </mat-card>
