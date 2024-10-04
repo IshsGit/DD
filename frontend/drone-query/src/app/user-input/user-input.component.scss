@@ -1,0 +1,39 @@
+.input-card {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-button {
+  margin-top: 16px;
+  float: right;
+}
+
+.response-card {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.response-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.response-table th, .response-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+}
+
+.response-table th {
+  background-color: #f5f5f5;
+}

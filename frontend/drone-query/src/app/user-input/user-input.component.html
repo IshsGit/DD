@@ -1,0 +1,37 @@
+<mat-card class="input-card">
+  <mat-card-content>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Your Query</mat-label>
+      <input matInput [(ngModel)]="userInput" placeholder="Type your message here..." />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="submitQuery()" class="submit-button">
+      Send
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<!-- Add a card to display the response from the API -->
+<mat-card class="response-card" *ngIf="responseData">
+  <mat-card-title>AI Response</mat-card-title>
+  <mat-card-content>
+    <!-- Assuming the response is a simple text -->
+    <p>{{ responseData?.response }}</p>
+    
+    <!-- If the response contains more structured data, use a table -->
+    <table *ngIf="responseData?.data" class="response-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of responseData?.data">
+          <td>{{ item.attribute }}</td>
+          <td>{{ item.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
