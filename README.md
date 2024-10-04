@@ -1,25 +1,9 @@
-Certainly! Here’s an updated `README.md` that includes detailed installation instructions:
+
 
 ```markdown
 # Drone Query Application
 
 This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend.
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [Frontend Installation](#frontend-installation)
-  - [Backend Installation](#backend-installation)
-- [Running the Application](#running-the-application)
-  - [Start the Backend](#start-the-backend)
-  - [Start the Frontend](#start-the-frontend)
-- [Usage](#usage)
-- [Testing](#testing)
-  - [Unit Testing](#unit-testing)
-  - [Backend Testing](#backend-testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Prerequisites
 
@@ -46,7 +30,7 @@ npm install -g @angular/cli
    Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/drone-query.git
+   git clone https://github.com/IshsGit/DroneDeploy.git
    cd drone-query/frontend
    ```
 
@@ -148,40 +132,8 @@ For testing the FastAPI backend, you can use pytest. First, ensure you're in the
 pytest
 ```
 
-## Contributing
-
-Contributions are welcome! Please create a new branch for your feature or bug fix:
-
-1. **Create a Branch:**
-
-   ```bash
-   git checkout -b feature/my-feature
-   ```
-
-2. **Make Your Changes and Commit:**
-
-   ```bash
-   git commit -m "Add my feature"
-   ```
-
-3. **Push to the Branch:**
-
-   ```bash
-   git push origin feature/my-feature
-   ```
-
-4. **Create a Pull Request:**
-
-   Go to the repository on GitHub and create a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
 ### Instructions:
 - Replace `your-username` with your actual GitHub username.
 - Modify the API keys and database URLs as per your application’s configuration.
 - Adjust any sections based on your specific project requirements.
 
-Feel free to let me know if you need any additional modifications or assistance!

@@ -5,7 +5,7 @@
       <input 
         matInput 
         [(ngModel)]="userInput" 
-        placeholder="Type your message here..." 
+        placeholder="Type your query here..." 
         (keydown)="handleKeyDown($event)"  
       />
     </mat-form-field>
@@ -14,7 +14,6 @@
       Send
     </button>
     
-    <!-- Loading spinner -->
     <mat-progress-spinner 
       *ngIf="isLoading" 
       mode="indeterminate" 
@@ -24,25 +23,30 @@
   </mat-card-content>
 </mat-card>
 
-<!-- Add a card to display the response from the API -->
-<mat-card class="response-card" *ngIf="responseData">
-  <mat-card-title>AI Response</mat-card-title>
+<!-- Show percentage response if available -->
+<mat-card class="response-card" *ngIf="percentageResponse">
+  <mat-card-title>Analysis Result</mat-card-title>
   <mat-card-content>
-    <p>{{ responseData?.response }}</p>
-    
-    <table *ngIf="responseData?.data" class="response-table">
-      <thead>
-        <tr>
-          <th>Attribute</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of responseData?.data">
-          <td>{{ item.attribute }}</td>
-          <td>{{ item.value }}</td>
-        </tr>
-      </tbody>
+    <p>{{ percentageResponse }}</p>
+  </mat-card-content>
+</mat-card>
+
+<!-- Show table if data exists -->
+<mat-card class="response-card" *ngIf="dataSource.data.length > 0 && !percentageResponse">
+  <mat-card-title>Response Data</mat-card-title>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- Dynamic Column Definitions -->
+      <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+        <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
+        <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+      </ng-container>
+
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <!-- Data Rows -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </mat-card-content>
 </mat-card>
