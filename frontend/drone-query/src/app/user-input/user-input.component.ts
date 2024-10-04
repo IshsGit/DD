@@ -20,7 +20,7 @@ export class UserInputComponent {
 
   submitQuery() {
     // Construct the URL for your FastAPI endpoint
-    const apiUrl = 'http://localhost:8000/api/query'; // Adjust this URL as needed
+    const apiUrl = 'http://localhost:8000/process-query/'; // Adjust this URL as needed
 
     // Send a POST request with the user input
     this.http.post(apiUrl, { query: this.userInput })
