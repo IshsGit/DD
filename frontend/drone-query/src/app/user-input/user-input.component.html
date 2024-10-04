@@ -2,12 +2,25 @@
   <mat-card-content>
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Your Query</mat-label>
-      <input matInput [(ngModel)]="userInput" placeholder="Type your message here..." />
+      <input 
+        matInput 
+        [(ngModel)]="userInput" 
+        placeholder="Type your message here..." 
+        (keydown)="handleKeyDown($event)"  
+      />
     </mat-form-field>
 
     <button mat-raised-button color="primary" (click)="submitQuery()" class="submit-button">
       Send
     </button>
+    
+    <!-- Loading spinner -->
+    <mat-progress-spinner 
+      *ngIf="isLoading" 
+      mode="indeterminate" 
+      diameter="30"
+      style="margin-left: 10px;">
+    </mat-progress-spinner>
   </mat-card-content>
 </mat-card>
 
@@ -15,10 +28,8 @@
 <mat-card class="response-card" *ngIf="responseData">
   <mat-card-title>AI Response</mat-card-title>
   <mat-card-content>
-    <!-- Assuming the response is a simple text -->
     <p>{{ responseData?.response }}</p>
     
-    <!-- If the response contains more structured data, use a table -->
     <table *ngIf="responseData?.data" class="response-table">
       <thead>
         <tr>
