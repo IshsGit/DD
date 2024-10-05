@@ -1,9 +1,15 @@
 .input-card {
   max-width: 600px;
-  margin: 20px auto;
+  margin: 20px auto; /* Center the card */
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center align items */
 }
 
 .full-width {
@@ -12,28 +18,53 @@
 
 .submit-button {
   margin-top: 16px;
-  float: right;
+  margin-bottom: 20px; /* Added space between the button and the table */
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center; /* Center the spinner */
+  margin-top: 16px;
 }
 
 .response-card {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5; /* Light background for response cards */
+  text-align: center; /* Center the text */
 }
 
-.response-table {
-  width: 100%;
-  border-collapse: collapse;
+.no-data-message {
+  text-align: center;
   margin-top: 20px;
+  font-style: italic;
+  color: #666;
 }
 
-.response-table th, .response-table td {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+.sort-info {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+  text-align: center; /* Center sort info */
 }
 
-.response-table th {
-  background-color: #f5f5f5;
+.mat-header-cell {
+  cursor: pointer; /* Ensure cursor is a pointer on header hover */
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Light background on hover */
+  }
+}
+
+.mat-spinner {
+  display: block;
+  margin: 0 auto; /* Center spinner */
+}
+
+.sort-instruction {
+  text-align: center;
+  font-style: italic;
+  margin: 10px 0; /* Space around instruction */
+  color: #3f51b5; /* Change color as needed */
 }

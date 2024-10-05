@@ -1,68 +1,52 @@
 <mat-card class="input-card">
+  <mat-card-header>
+    <mat-card-title>User Input</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Your Query</mat-label>
-      <input 
-        matInput 
-        [(ngModel)]="userInput" 
-        placeholder="Type your query here..." 
-        (keydown)="handleKeyDown($event)"  
-      />
-    </mat-form-field>
+    <div class="input-container">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Enter your query</mat-label>
+        <input matInput [(ngModel)]="userInput" (keydown)="handleKeyDown($event)">
+      </mat-form-field>
+      <button mat-raised-button (click)="submitQuery()" [disabled]="isLoading" class="submit-button">Submit</button>
+    </div>
 
-    <button mat-raised-button color="primary" (click)="submitQuery()" class="submit-button">
-      Send
-    </button>
-    
-    <mat-progress-spinner 
-      *ngIf="isLoading" 
-      mode="indeterminate" 
-      diameter="30"
-      style="margin-left: 10px;">
-    </mat-progress-spinner>
-  </mat-card-content>
-</mat-card>
+    <div *ngIf="isLoading" class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
 
-<!-- Show percentage response if available -->
-<mat-card class="response-card" *ngIf="percentageResponse">
-  <mat-card-title>Analysis Result</mat-card-title>
-  <mat-card-content>
-    <p>{{ percentageResponse }}</p>
-  </mat-card-content>
-</mat-card>
+    <!-- Only show percentage or direct response if there is no table data -->
+    <div *ngIf="!dataSource.data.length">
+      <div *ngIf="percentageResponse" class="response-card">
+        <p>Percentage Response: {{ percentageResponse }}</p>
+      </div>
+      <div *ngIf="directResponse && !percentageResponse" class="response-card">
+        <p>Direct Response: {{ directResponse }}</p>
+      </div>
+    </div>
 
-<!-- Show direct response if available -->
-<mat-card class="response-card" *ngIf="directResponse && !percentageResponse && dataSource.data.length === 0">
-  <mat-card-title>Response</mat-card-title>
-  <mat-card-content>
-    <p>{{ directResponse }}</p>
-  </mat-card-content>
-</mat-card>
+    <div *ngIf="dataSource.data.length > 0" class="sort-instruction">
+      <p>Click on the column headers to sort the table.</p>
+    </div>
 
-<!-- Show table if data exists -->
-<mat-card class="response-card" *ngIf="dataSource.data.length > 0 && !percentageResponse">
-  <mat-card-title>Response Data</mat-card-title>
-  <mat-card-content>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <!-- Dynamic Column Definitions -->
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.data.length > 0">
       <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
-        <th mat-header-cell *matHeaderCellDef> {{ column }} </th>
-        <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+        <mat-header-cell *matHeaderCellDef (click)="sortData(column)" class="sortable-header">
+          {{ column | titlecase }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element[column] ?? 'N/A' }} <!-- Display 'N/A' for null or undefined -->
+        </mat-cell>
       </ng-container>
 
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
 
-      <!-- Data Rows -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </mat-card-content>
-</mat-card>
-
-<!-- Show message if no data available -->
-<mat-card class="response-card" *ngIf="dataSource.data.length === 0 && !percentageResponse && !directResponse">
-  <mat-card-title>No Data Available</mat-card-title>
-  <mat-card-content>
-    <p>No data available for the given query.</p>
+    <!-- Sorting Info -->
+    <div *ngIf="currentSort.column" class="sort-info">
+      <p>{{ currentSort.direction === 'asc' ? 'Ascending' : 'Descending' }} by: {{ currentSort.column | titlecase }}</p>
+      <button mat-button (click)="resetSort()">Reset Sort</button>
+    </div>
   </mat-card-content>
 </mat-card>
