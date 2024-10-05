@@ -1,3 +1,33 @@
+## Project Checklist
+
+- [x] **Frontend:**
+  - [x] Preferred: Use Angular (extra credit for using TypeScript)
+  - [x] Fallback: Use a frontend framework you are comfortable with (React, Vue, etc.)
+  - [x] Build a clean, responsive UI that allows users to input and receive information.
+  - [x] Display the drone data provided on the page in a simple table or card format.
+  - [x] Input box for user queries (e.g., “What is the altitude of the second image?” or “What is the battery level of the drone during the last image?”).
+  - [x] Display the AI response or the mock response.
+
+- [x] **API:**
+  - [x] Preferred: Use Python (e.g., Flask or FastAPI).
+  - [x] Fallback: Use Node.js or another language if you are not familiar with Python.
+  - [x] Receive a user query.
+  - [x] Use an AI service (Gemini, OpenAI, Anthropic) to interpret the question and retrieve the relevant data.
+  - [x] If AI service integration is not possible, mock the response with some minimal logic and return it to the front end.
+
+- [x] **AI Integration (Optional but encouraged):**
+  - [x] Integrate with Gemini, OpenAI, or Anthropic to handle natural language queries.
+  - [x] If AI integration is not feasible, provide a mock response.
+
+- [ ] **Optional Bonus:**
+  - [x] Use TypeScript if working with Angular or another framework that supports it.
+  - [x] Add a feature that allows sorting or filtering the drone data table based on user-selected criteria.
+  - [ ] Implement basic unit tests. --> Encountered environment issues with Karma, development postponed
+
+- [x] **Instructions:**
+  - [x] Provide clear instructions on how to run both the frontend and backend.
+  - [x] Ensure that the app can be run locally with minimal setup.
+
 
 # Drone Query Application
 
@@ -31,7 +61,7 @@ Before you begin, ensure you have the following installed on your machine:
 - [Angular CLI](https://angular.io/cli) (install via npm)
 - [Python](https://www.python.org/downloads/) (version 3.7 or later)
 - [FastAPI](https://fastapi.tiangolo.com/) (can be installed via pip)
-- [PostgreSQL](https://www.postgresql.org/download/) or any other database you wish to use (optional, based on your application needs)
+- [Gemini]([https://www.postgresql.org/download/](https://ai.google.dev/gemini-api/docs/quickstart?lang=python)) follow documentation to create API key
 
 To install Angular CLI globally, run:
 
@@ -93,7 +123,7 @@ npm install -g @angular/cli
    touch .env
    ```
 
-   Add the following to your `.env` file (replace with actual values):
+   Add the following to your `.env` file (replace with actual values, refer to gemini documentation to create API keys):
 
    ```plaintext
    GEMINI_API_KEY=your_api_key_here
@@ -282,29 +312,4 @@ import json
 def load_dataset(file_path: str):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
-```
-
-## Testing
-
-### Frontend Testing
-
-To test the Angular application, you can run:
-
-```bash
-ng test
-```
-
-### Backend Testing
-
-For testing the FastAPI backend, you can use `pytest`. First, ensure you're in the backend virtual environment, then run:
-
-```bash
-pytest
-```
-
-## Conclusion
-
-This application demonstrates the integration of an Angular frontend with a FastAPI backend powered by the Gemini API for querying and processing drone metadata. You can customize and
-
- expand upon this base to build a more sophisticated drone data query system.
 ```
