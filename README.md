@@ -6,10 +6,10 @@ This repository contains the Drone Query application, which utilizes Angular for
 ## Output Screenshots
 
 #### 1. Basic Analysis Display
-![Basic Analysis](./images/basic_card_data.png)
+![Basic Analysis](https://drive.google.com/uc?id=18hxdH-S6RPXOy3JuXp_FUDRoElGzWUrI)
 
 #### 2. Table Display for Data
-![Table Display](./images/table_display.png)
+![Table Display](https://drive.google.com/file/d/13n6G6T0RGMXtC_PrVoPNO6FV92wYSa8R/view?usp=drive_link)
 
 ## Known Bugs and Issues
 
