@@ -114,15 +114,6 @@ npm install -g @angular/cli
 - Enter your query in the input field and press "Send" or hit "Enter".
 - The response will be displayed below the input.
 
-## Testing
-
-### Unit Testing
-
-You can run unit tests for the frontend using:
-
-```bash
-ng test
-```
 
 ### Backend Testing
 
