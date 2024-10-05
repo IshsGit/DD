@@ -11,24 +11,23 @@
       <button mat-raised-button (click)="submitQuery()" [disabled]="isLoading" class="submit-button">Submit</button>
     </div>
 
+    <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="spinner-container">
       <mat-spinner></mat-spinner>
     </div>
 
-    <!-- Only show percentage or direct response if there is no table data -->
-    <div *ngIf="!dataSource.data.length">
-      <div *ngIf="percentageResponse" class="response-card">
-        <p>Percentage Response: {{ percentageResponse }}</p>
-      </div>
-      <div *ngIf="directResponse && !percentageResponse" class="response-card">
-        <p>Direct Response: {{ directResponse }}</p>
-      </div>
+    <!-- Analysis Section -->
+    <div *ngIf="!dataSource.data.length && (directResponse || percentageResponse)" class="response-card analysis-card">
+      <h3>Your Analysis</h3>
+      <p>{{ percentageResponse || directResponse }}</p>
     </div>
 
+    <!-- Sorting Instructions -->
     <div *ngIf="dataSource.data.length > 0" class="sort-instruction">
       <p>Click on the column headers to sort the table.</p>
     </div>
 
+    <!-- Data Table -->
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.data.length > 0">
       <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
         <mat-header-cell *matHeaderCellDef (click)="sortData(column)" class="sortable-header">

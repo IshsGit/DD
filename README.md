@@ -1,9 +1,7 @@
-
-
 ```markdown
 # Drone Query Application
 
-This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend.
+This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend. The system allows users to submit queries and retrieve structured data or percentage-based responses based on drone image metadata, processed by the Gemini AI model.
 
 ## Prerequisites
 
@@ -111,20 +109,178 @@ npm install -g @angular/cli
 ## Usage
 
 - Open your browser and navigate to `http://localhost:4200`.
-- Enter your query in the input field and press "Send" or hit "Enter".
-- The response will be displayed below the input.
+- Enter your query in the input field and press "Submit" or hit "Enter".
+- The response will be displayed below the input, either in the form of structured data (tabular format) or a percentage-based response.
 
+## Notable Code Snippets
+
+### Frontend (Angular) - `UserInputComponent`
+
+The `UserInputComponent` in Angular is the main interface for users to input their queries. It sends the user query to the backend and processes the response.
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-user-input',
+  templateUrl: './user-input.component.html',
+  styleUrls: ['./user-input.component.scss'],
+})
+export class UserInputComponent implements AfterViewInit {
+  userInput: string = '';
+  dataSource = new MatTableDataSource<ImageData>([]);
+  displayedColumns: string[] = [];
+  percentageResponse: string | null = null;
+  directResponse: string | null = null;
+  isLoading: boolean = false;
+
+  @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(private http: HttpClient) {}
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  submitQuery() {
+    const apiUrl = 'http://localhost:8000/process-query/';
+    this.isLoading = true;
+    this.http.post<{ response: { response: string; data: ImageData[]; percentage?: string } }>(apiUrl, { query: this.userInput })
+      .subscribe({
+        next: (response) => {
+          this.percentageResponse = response.response.percentage || null;
+          this.directResponse = response.response.response || null;
+          this.dataSource.data = response.response.data || [];
+          this.displayedColumns = Object.keys(response.response.data[0] || {});
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          this.isLoading = false;
+        }
+      });
+  }
+}
+```
+
+### Backend (FastAPI) - Gemini Query Handler
+
+The backend processes user queries using the Gemini API, which utilizes AI to analyze the dataset and return either percentage-based or structured table responses.
+
+```python
+import os
+import logging
+from dotenv import load_dotenv
+import google.generativeai as genai
+from data.dataset import load_dataset
+
+load_dotenv()
+
+# Configure the Gemini API
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_API_KEY)
+
+def process_query(query: str, dataset_path: str) -> dict:
+    logging.info(f"Processing query: {query}")
+    dataset = load_dataset(dataset_path)
+
+    safety_settings = [{"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"}]
+
+    model = genai.GenerativeModel("gemini-pro")
+    chat = model.start_chat(history=[])
+
+    full_prompt = f"{query}\n{dataset}"
+
+    try:
+        response = chat.send_message(full_prompt, safety_settings=safety_settings)
+        return process_response(response.text.strip())
+    except Exception as e:
+        logging.error(f"Error: {e}")
+        return {"response": "An error occurred.", "data": None}
+
+def process_response(response_text: str) -> dict:
+    structured_response = {'response': response_text, 'data': []}
+    if '%' in response_text:
+        structured_response['percentage'] = response_text
+    else:
+        lines = response_text.splitlines()
+        if len(lines) > 1:
+            headers = [header.strip() for header in lines[0].split('|')]
+            for line in lines[1:]:
+                values = [value.strip() for value in line.split('|')]
+                if len(values) == len(headers):
+                    row_data = {headers[i]: values[i] for i in range(len(headers))}
+                    structured_response['data'].append(row_data)
+    return structured_response
+```
+
+### CORS and FastAPI Setup
+
+FastAPI is set up with CORS middleware to allow requests from the frontend hosted on `localhost:4200`.
+
+```python
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from gemini_handler import process_query
+
+app = FastAPI()
+
+# CORS configuration
+origins = ["http://localhost:4200"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class UserQuery(BaseModel):
+    query: str
+
+@app.post("/process-query/")
+async def handle_query(user_query: UserQuery):
+    dataset_path = "data/dataset.json"
+    response = process_query(user_query.query, dataset_path)
+    return {"response": response}
+```
+
+### Dataset Loader
+
+This simple utility loads the dataset used by the Gemini API from a JSON file.
+
+```python
+import json
+
+def load_dataset(file_path: str):
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+```
+
+## Testing
+
+### Frontend Testing
+
+To test the Angular application, you can run:
+
+```bash
+ng test
+```
 
 ### Backend Testing
 
-For testing the FastAPI backend, you can use pytest. First, ensure you're in the backend virtual environment, then run:
+For testing the FastAPI backend, you can use `pytest`. First, ensure you're in the backend virtual environment, then run:
 
 ```bash
 pytest
 ```
 
-### Instructions:
-- Replace `your-username` with your actual GitHub username.
-- Modify the API keys and database URLs as per your application’s configuration.
-- Adjust any sections based on your specific project requirements.
+## Conclusion
 
+This application demonstrates the integration of an Angular frontend with a FastAPI backend powered by the Gemini API for querying and processing drone metadata. You can customize and expand upon this base to build a more sophisticated drone data query system.
+```

@@ -1,39 +1,53 @@
-.input-card {
-  max-width: 600px;
-  margin: 20px auto; /* Center the card */
+.analysis-card {
+  margin-top: 20px;
   padding: 20px;
+  border-radius: 10px;
+  background-color: #e3f2fd; /* Light blue background */
+  color: #0d47a1; /* Dark blue text */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1.2rem; /* Slightly larger text */
+}
+
+.analysis-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0d47a1;
+}
+
+.input-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 24px;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.input-container {
-  display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center align items */
+.response-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
 }
 
 .full-width {
   width: 100%;
+  max-width: 760px;
 }
 
 .submit-button {
-  margin-top: 16px;
-  margin-bottom: 20px; /* Added space between the button and the table */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 200px;
+  font-size: 1.2rem;
 }
 
 .spinner-container {
   display: flex;
-  justify-content: center; /* Center the spinner */
+  justify-content: center;
   margin-top: 16px;
-}
-
-.response-card {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #f5f5f5; /* Light background for response cards */
-  text-align: center; /* Center the text */
 }
 
 .no-data-message {
@@ -47,24 +61,12 @@
   margin-top: 10px;
   font-weight: bold;
   color: #333;
-  text-align: center; /* Center sort info */
-}
-
-.mat-header-cell {
-  cursor: pointer; /* Ensure cursor is a pointer on header hover */
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Light background on hover */
-  }
-}
-
-.mat-spinner {
-  display: block;
-  margin: 0 auto; /* Center spinner */
+  text-align: center;
 }
 
 .sort-instruction {
   text-align: center;
   font-style: italic;
-  margin: 10px 0; /* Space around instruction */
-  color: #3f51b5; /* Change color as needed */
+  margin: 10px 0;
+  color: #3f51b5;
 }
