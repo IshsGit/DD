@@ -3,7 +3,7 @@
 
 This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend. The system allows users to submit queries and retrieve structured data or percentage-based responses based on drone image metadata, processed by the Gemini AI model.
 
-### Output Screenshots
+## Output Screenshots
 
 #### 1. Basic Analysis Display
 ![Basic Analysis](./images/basic_card_data.png)
@@ -23,8 +23,6 @@ In some cases, the unit or metric (e.g., `%` or `m`) disappears from the respons
 Karma/Jasmine tests fail to load and execute properly in the browser due to an environment-related issue, preventing test runs from completing successfully.
 
 ---
-
-
 
 ## Prerequisites
 
@@ -111,7 +109,7 @@ npm install -g @angular/cli
    In the backend directory, start the FastAPI server:
 
    ```bash
-   fastapi dev main.py
+   uvicorn main:app --reload
    ```
 
    The server will run at `http://localhost:8000`.
@@ -304,5 +302,7 @@ pytest
 
 ## Conclusion
 
-This application demonstrates the integration of an Angular frontend with a FastAPI backend powered by the Gemini API for querying and processing drone metadata. You can customize and expand upon this base to build a more sophisticated drone data query system.
+This application demonstrates the integration of an Angular frontend with a FastAPI backend powered by the Gemini API for querying and processing drone metadata. You can customize and
+
+ expand upon this base to build a more sophisticated drone data query system.
 ```
