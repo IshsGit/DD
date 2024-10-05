@@ -109,7 +109,7 @@ npm install -g @angular/cli
    In the backend directory, start the FastAPI server:
 
    ```bash
-   uvicorn main:app --reload
+   fastapi dev main.py
    ```
 
    The server will run at `http://localhost:8000`.
