@@ -90,45 +90,25 @@ def process_response(response_text: str) -> dict:
     if '%' in response_text:
         structured_response['percentage'] = response_text  # Percentage response
     else:
-        # Assume the response is tabular and parse it into a normalized JSON format
+        # Extract the table portion from the response text
         lines = response_text.splitlines()
+        
+        if len(lines) > 1:  # Ensure there is a table present
+            # Assuming the first line is the header
+            headers = [header.strip() for header in lines[0].split('|') if header.strip()]
 
-        # Extract headers from the first line
-        headers = [header.strip() for header in lines[0].split('|') if header.strip()]
-
-        # Extract data rows
-        for line in lines[1:]:
-            # Skip empty lines
-            if not line.strip():
-                continue
-            
-            values = [value.strip() for value in line.split('|') if value.strip()]
-            if len(values) == len(headers):
-                # Create a dictionary for each image
-                row_data = {}
-                image_id = None
-
-                for i in range(len(headers)):
-                    key = headers[i].lower().replace(' ', '_')  # Normalize keys
-                    value = values[i]
-
-                    # Set image ID from the first column (assuming first column contains image ID)
-                    if i == 0:  # Assuming the first header is the image ID
-                        image_id = value
-                    else:
-                        # Include only specific attributes for the structured response
-                        if key in ['latitude', 'longitude', 'altitude_m']:  # Only keep the required fields
-                            row_data[key] = value
-
-                # Only append if image_id is valid
-                if image_id:
-                    # Create a structured entry
-                    structured_entry = {
-                        "image_id": image_id,
-                        "latitude": row_data.get('latitude'),
-                        "longitude": row_data.get('longitude'),
-                        "altitude_m": row_data.get('altitude_m')
-                    }
-                    structured_response['data'].append(structured_entry)
+            # Process subsequent lines as data rows
+            for line in lines[1:]:
+                # Split and clean the line
+                values = [value.strip() for value in line.split('|') if value.strip()]
+                if len(values) == len(headers):
+                    row_data = {}
+                    for i in range(len(headers)):
+                        key = headers[i].lower().replace(' ', '_')  # Normalize keys
+                        value = values[i]
+                        row_data[key] = value
+                    
+                    # Add the populated row data into the structured response
+                    structured_response['data'].append(row_data)
 
     return structured_response

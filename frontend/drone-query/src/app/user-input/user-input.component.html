@@ -31,6 +31,14 @@
   </mat-card-content>
 </mat-card>
 
+<!-- Show direct response if available -->
+<mat-card class="response-card" *ngIf="directResponse && !percentageResponse && dataSource.data.length === 0">
+  <mat-card-title>Response</mat-card-title>
+  <mat-card-content>
+    <p>{{ directResponse }}</p>
+  </mat-card-content>
+</mat-card>
+
 <!-- Show table if data exists -->
 <mat-card class="response-card" *ngIf="dataSource.data.length > 0 && !percentageResponse">
   <mat-card-title>Response Data</mat-card-title>
@@ -52,7 +60,7 @@
 </mat-card>
 
 <!-- Show message if no data available -->
-<mat-card class="response-card" *ngIf="dataSource.data.length === 0 && !percentageResponse">
+<mat-card class="response-card" *ngIf="dataSource.data.length === 0 && !percentageResponse && !directResponse">
   <mat-card-title>No Data Available</mat-card-title>
   <mat-card-content>
     <p>No data available for the given query.</p>

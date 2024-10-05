@@ -11,27 +11,27 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 
 interface ImageData {
-  imageId?: string;
-  timestamp?: string;
-  latitude?: string;
-  longitude?: string;
-  altitude?: string;
-  heading?: string;
-  fileName?: string;
-  cameraTilt?: string;
-  focalLength?: string;
-  iso?: string;
-  shutterSpeed?: string;
-  aperture?: string;
-  colorTemp?: string;
-  imageFormat?: string;
-  fileSize?: string;
-  droneSpeed?: string;
-  batteryLevel?: string;
-  gpsAccuracy?: string;
-  gimbalMode?: string;
-  subjectDetection?: string;
-  imageTags?: string;
+  image_id?: string;            // Updated to match API response
+  timestamp?: string;           // Matches the API response
+  latitude?: string;            // Matches the API response
+  longitude?: string;           // Matches the API response
+  altitude_m?: number | null;   // Updated to match API response
+  heading_deg?: number | null;   // Updated to match API response
+  file_name?: string;           // Updated to match API response
+  camera_tilt_deg?: number | null; // Updated to match API response
+  focal_length_mm?: number | null; // Updated to match API response
+  iso?: number | null;          // Updated to match API response
+  shutter_speed?: string;       // Matches the API response
+  aperture?: string;            // Matches the API response
+  color_temp_k?: number | null; // Updated to match API response
+  image_format?: string;        // Matches the API response
+  file_size_mb?: number | null; // Updated to match API response
+  drone_speed_mps?: number | null; // Updated to match API response
+  battery_level_pct?: number | null; // Updated to match API response
+  gps_accuracy_m?: number | null; // Updated to match API response
+  gimbal_mode?: string;         // Matches the API response
+  subject_detection?: string;   // Matches the API response
+  image_tags?: string;          // Matches the API response
 }
 
 @Component({
@@ -56,6 +56,7 @@ export class UserInputComponent {
   displayedColumns: string[] = [];  // Dynamically populated columns for the table
   percentageResponse: string | null = null;  // For single percentage response
   isLoading: boolean = false;
+  directResponse: string | null = null; // For handling direct text responses
 
   constructor(private http: HttpClient) {}
 
@@ -64,6 +65,7 @@ export class UserInputComponent {
 
     this.isLoading = true;
     this.percentageResponse = null; // Reset any previous percentage response
+    this.directResponse = null; // Reset direct response
 
     this.http.post<{ response: { response: string; data: ImageData[]; percentage?: string } }>(apiUrl, { query: this.userInput })
       .subscribe({
@@ -71,19 +73,17 @@ export class UserInputComponent {
           console.log('Response from server:', response);
           this.percentageResponse = response.response.percentage || null; // Store percentage if available
 
-          // Parse the image data into a more structured format
-          if (response.response.response) {
-            const parsedData = this.parseResponseData(response.response.response);
-            this.dataSource.data = parsedData; // Set table data
-          } else {
-            this.dataSource.data = []; // Reset table data if no response
-          }
-          
-          // Dynamically generate columns based on the data
-          if (this.dataSource.data.length > 0) {
+          // Check if there's structured data or direct text response
+          if (response.response.data && response.response.data.length > 0) {
+            // When there is structured image data
+            this.dataSource.data = response.response.data;
             this.displayedColumns = Object.keys(this.dataSource.data[0]);
+            this.directResponse = null; // Clear direct response
           } else {
-            this.displayedColumns = []; // Reset columns if no data
+            // Handle direct response
+            this.directResponse = this.parseDirectResponse(response.response.response);
+            this.dataSource.data = []; // Clear any previous table data
+            this.displayedColumns = []; // Reset columns
           }
 
           this.isLoading = false;
@@ -95,51 +95,9 @@ export class UserInputComponent {
       });
   }
 
-  private parseResponseData(responseString: string): ImageData[] {
-    const rows = responseString.split('\n').slice(2, -1); // Skip header and last empty row
-    const data: ImageData[] = [];
-    const expectedColumns = [
-      "imageId",
-      "timestamp",
-      "latitude",
-      "longitude",
-      "altitude",
-      "heading",
-      "fileName",
-      "cameraTilt",
-      "focalLength",
-      "iso",
-      "shutterSpeed",
-      "aperture",
-      "colorTemp",
-      "imageFormat",
-      "fileSize",
-      "droneSpeed",
-      "batteryLevel",
-      "gpsAccuracy",
-      "gimbalMode",
-      "subjectDetection",
-      "imageTags"
-    ];
-
-    rows.forEach(row => {
-      const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
-      if (cells.length > 0) {
-        // Create a new entry object
-        const entry: ImageData = {};
-
-        // Populate entry with existing values, only if they are present
-        expectedColumns.forEach((column, index) => {
-          if (cells[index] !== undefined) {
-            entry[column as keyof ImageData] = cells[index];  // Type assertion
-          }
-        });
-
-        data.push(entry);
-      }
-    });
-
-    return data;
+  private parseDirectResponse(responseString: string): string {
+    // This function could be expanded based on your formatting needs.
+    return responseString.replace(/'/g, ''); // Simple cleaning if needed, adjust as necessary.
   }
 
   handleKeyDown(event: KeyboardEvent) {
