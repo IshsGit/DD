@@ -127,7 +127,6 @@ npm install -g @angular/cli
 
    ```plaintext
    GEMINI_API_KEY=your_api_key_here
-   DATABASE_URL=your_database_url_here
    ```
 
 ## Running the Application
