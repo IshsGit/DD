@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;  /* Stack children vertically */
+    min-height: 100vh;      /* Ensure the component takes at least the full height of the viewport */
+  }
+  
+  .main-content {
+    flex: 1;                /* Allows this section to grow and take available space */
+    /* Optionally add padding or margins here */
+  }
+  
+  app-footer {
+    margin-top: auto;      /* Pushes footer to the bottom */
+  }
+  

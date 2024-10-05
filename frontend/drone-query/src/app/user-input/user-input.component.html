@@ -1,48 +1,51 @@
 <mat-card class="input-card">
+  <mat-card-header>
+    <mat-card-title>User Input</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Your Query</mat-label>
-      <input 
-        matInput 
-        [(ngModel)]="userInput" 
-        placeholder="Type your message here..." 
-        (keydown)="handleKeyDown($event)"  
-      />
-    </mat-form-field>
+    <div class="input-container">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Enter your query</mat-label>
+        <input matInput [(ngModel)]="userInput" (keydown)="handleKeyDown($event)">
+      </mat-form-field>
+      <button mat-raised-button (click)="submitQuery()" [disabled]="isLoading" class="submit-button">Submit</button>
+    </div>
 
-    <button mat-raised-button color="primary" (click)="submitQuery()" class="submit-button">
-      Send
-    </button>
-    
-    <!-- Loading spinner -->
-    <mat-progress-spinner 
-      *ngIf="isLoading" 
-      mode="indeterminate" 
-      diameter="30"
-      style="margin-left: 10px;">
-    </mat-progress-spinner>
-  </mat-card-content>
-</mat-card>
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
 
-<!-- Add a card to display the response from the API -->
-<mat-card class="response-card" *ngIf="responseData">
-  <mat-card-title>AI Response</mat-card-title>
-  <mat-card-content>
-    <p>{{ responseData?.response }}</p>
-    
-    <table *ngIf="responseData?.data" class="response-table">
-      <thead>
-        <tr>
-          <th>Attribute</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of responseData?.data">
-          <td>{{ item.attribute }}</td>
-          <td>{{ item.value }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Analysis Section -->
+    <div *ngIf="!dataSource.data.length && (directResponse || percentageResponse)" class="response-card analysis-card">
+      <h3>Your Analysis</h3>
+      <p>{{ percentageResponse || directResponse }}</p>
+    </div>
+
+    <!-- Sorting Instructions -->
+    <div *ngIf="dataSource.data.length > 0" class="sort-instruction">
+      <p>Click on the column headers to sort the table.</p>
+    </div>
+
+    <!-- Data Table -->
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.data.length > 0">
+      <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef (click)="sortData(column)" class="sortable-header">
+          {{ column | titlecase }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element[column] ?? 'N/A' }} <!-- Display 'N/A' for null or undefined -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <!-- Sorting Info -->
+    <div *ngIf="currentSort.column" class="sort-info">
+      <p>{{ currentSort.direction === 'asc' ? 'Ascending' : 'Descending' }} by: {{ currentSort.column | titlecase }}</p>
+      <button mat-button (click)="resetSort()">Reset Sort</button>
+    </div>
   </mat-card-content>
 </mat-card>
