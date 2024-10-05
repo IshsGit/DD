@@ -3,11 +3,33 @@
 
 This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend. The system allows users to submit queries and retrieve structured data or percentage-based responses based on drone image metadata, processed by the Gemini AI model.
 
+### Output Screenshots
+
+#### 1. Basic Analysis Display
+![Basic Analysis](./images/basic_card_data.png)
+
+#### 2. Table Display for Data
+![Table Display](./images/table_display.png)
+
+## Known Bugs and Issues
+
+### 1. Inconsistent Data Rendering
+In some cases, the format of the response data can lead to incorrect rendering as a table, even when a simple card display would be more appropriate. This issue is particularly evident when the API returns a structured JSON response that includes both a `"response"` field and a `"data"` array, which is not suited for tabular display.
+
+### 2. Missing Metric in Responses
+In some cases, the unit or metric (e.g., `%` or `m`) disappears from the response, displaying values like `75` instead of `75%` or `82` instead of `82m`. This bug is caused by an issue in the conditional logic within the user input component and template.
+
+### 3. Karma/Jasmine Environment Bug
+Karma/Jasmine tests fail to load and execute properly in the browser due to an environment-related issue, preventing test runs from completing successfully.
+
+---
+
+
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your machine:
 
-- [Node.js](https://nodejs.org/) (version 14 or later)
 - [Angular CLI](https://angular.io/cli) (install via npm)
 - [Python](https://www.python.org/downloads/) (version 3.7 or later)
 - [FastAPI](https://fastapi.tiangolo.com/) (can be installed via pip)
