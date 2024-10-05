@@ -50,3 +50,11 @@
     </table>
   </mat-card-content>
 </mat-card>
+
+<!-- Show message if no data available -->
+<mat-card class="response-card" *ngIf="dataSource.data.length === 0 && !percentageResponse">
+  <mat-card-title>No Data Available</mat-card-title>
+  <mat-card-content>
+    <p>No data available for the given query.</p>
+  </mat-card-content>
+</mat-card>

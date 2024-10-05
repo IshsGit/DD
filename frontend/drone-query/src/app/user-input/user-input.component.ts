@@ -10,6 +10,30 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 
+interface ImageData {
+  imageId?: string;
+  timestamp?: string;
+  latitude?: string;
+  longitude?: string;
+  altitude?: string;
+  heading?: string;
+  fileName?: string;
+  cameraTilt?: string;
+  focalLength?: string;
+  iso?: string;
+  shutterSpeed?: string;
+  aperture?: string;
+  colorTemp?: string;
+  imageFormat?: string;
+  fileSize?: string;
+  droneSpeed?: string;
+  batteryLevel?: string;
+  gpsAccuracy?: string;
+  gimbalMode?: string;
+  subjectDetection?: string;
+  imageTags?: string;
+}
+
 @Component({
   selector: 'app-user-input',
   standalone: true,
@@ -28,7 +52,7 @@ import { MatTableModule } from '@angular/material/table';
 })
 export class UserInputComponent {
   userInput: string = '';
-  dataSource = new MatTableDataSource<any>([]); // For table data
+  dataSource = new MatTableDataSource<ImageData>([]); // For table data
   displayedColumns: string[] = [];  // Dynamically populated columns for the table
   percentageResponse: string | null = null;  // For single percentage response
   isLoading: boolean = false;
@@ -41,36 +65,25 @@ export class UserInputComponent {
     this.isLoading = true;
     this.percentageResponse = null; // Reset any previous percentage response
 
-    this.http.post<{ response: string }>(apiUrl, { query: this.userInput })
+    this.http.post<{ response: { response: string; data: ImageData[]; percentage?: string } }>(apiUrl, { query: this.userInput })
       .subscribe({
         next: (response) => {
           console.log('Response from server:', response);
-          const responseData = response.response.trim();
+          this.percentageResponse = response.response.percentage || null; // Store percentage if available
 
-          // Check if the response is a percentage (single data)
-          if (responseData.includes('%')) {
-            this.percentageResponse = responseData; // Display percentage
-            this.dataSource.data = [];  // Clear table data
-          } 
-          // Check for structured text format
-          else if (responseData.startsWith('**Image')) {
-            this.percentageResponse = null; // Clear any percentage response
-            this.dataSource.data = this.parseStructuredTextResponse(responseData);
-            
-            // Dynamically generate columns based on the parsed table
-            if (this.dataSource.data.length > 0) {
-              this.displayedColumns = Object.keys(this.dataSource.data[0]);
-            }
-          } 
-          // Handle markdown table format
-          else {
-            this.percentageResponse = null; // Clear any percentage response
-            this.dataSource.data = this.parseMarkdownTable(responseData);
-            
-            // Dynamically generate columns based on the parsed table
-            if (this.dataSource.data.length > 0) {
-              this.displayedColumns = Object.keys(this.dataSource.data[0]);
-            }
+          // Parse the image data into a more structured format
+          if (response.response.response) {
+            const parsedData = this.parseResponseData(response.response.response);
+            this.dataSource.data = parsedData; // Set table data
+          } else {
+            this.dataSource.data = []; // Reset table data if no response
+          }
+          
+          // Dynamically generate columns based on the data
+          if (this.dataSource.data.length > 0) {
+            this.displayedColumns = Object.keys(this.dataSource.data[0]);
+          } else {
+            this.displayedColumns = []; // Reset columns if no data
           }
 
           this.isLoading = false;
@@ -82,43 +95,51 @@ export class UserInputComponent {
       });
   }
 
-  // Method to parse the structured text response
-  parseStructuredTextResponse(text: string): any[] {
-    const imagesData: any[] = [];
-    const imageBlocks = text.split(/\*\*Image \d+\*\*/).filter(block => block.trim() !== '');
+  private parseResponseData(responseString: string): ImageData[] {
+    const rows = responseString.split('\n').slice(2, -1); // Skip header and last empty row
+    const data: ImageData[] = [];
+    const expectedColumns = [
+      "imageId",
+      "timestamp",
+      "latitude",
+      "longitude",
+      "altitude",
+      "heading",
+      "fileName",
+      "cameraTilt",
+      "focalLength",
+      "iso",
+      "shutterSpeed",
+      "aperture",
+      "colorTemp",
+      "imageFormat",
+      "fileSize",
+      "droneSpeed",
+      "batteryLevel",
+      "gpsAccuracy",
+      "gimbalMode",
+      "subjectDetection",
+      "imageTags"
+    ];
 
-    imageBlocks.forEach(block => {
-      const imageInfo: any = {};
-      const lines = block.split('\n').filter(line => line.trim() !== '');
-      
-      lines.forEach(line => {
-        const [key, value] = line.split(':').map(part => part.trim());
-        if (key && value) {
-          imageInfo[key.replace(/'/g, '').trim()] = value.replace(/'/g, '').trim();
-        }
-      });
-      
-      if (Object.keys(imageInfo).length > 0) {
-        imagesData.push(imageInfo);
+    rows.forEach(row => {
+      const cells = row.split('|').map(cell => cell.trim()).filter(cell => cell);
+      if (cells.length > 0) {
+        // Create a new entry object
+        const entry: ImageData = {};
+
+        // Populate entry with existing values, only if they are present
+        expectedColumns.forEach((column, index) => {
+          if (cells[index] !== undefined) {
+            entry[column as keyof ImageData] = cells[index];  // Type assertion
+          }
+        });
+
+        data.push(entry);
       }
     });
 
-    return imagesData;
-  }
-
-  // Method to parse the markdown table into an array of objects
-  parseMarkdownTable(markdown: string): any[] {
-    const rows = markdown.split('\n').filter(row => row.startsWith('|')).slice(1); // Extract rows from the markdown
-    const headers = rows[0].split('|').map(header => header.trim()).filter(header => header); // Get column headers
-
-    return rows.slice(1).map(row => {
-      const values = row.split('|').map(value => value.trim()).filter(value => value);
-      const result: any = {};
-      headers.forEach((header, index) => {
-        result[header] = values[index];  // Assign column data
-      });
-      return result;
-    });
+    return data;
   }
 
   handleKeyDown(event: KeyboardEvent) {
