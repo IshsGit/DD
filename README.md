@@ -1,4 +1,4 @@
-```markdown
+
 # Drone Query Application
 
 This repository contains the Drone Query application, which utilizes Angular for the frontend and FastAPI for the backend. The system allows users to submit queries and retrieve structured data or percentage-based responses based on drone image metadata, processed by the Gemini AI model.
@@ -6,10 +6,10 @@ This repository contains the Drone Query application, which utilizes Angular for
 ## Output Screenshots
 
 #### 1. Basic Analysis Display
-![Basic Analysis](https://drive.google.com/uc?id=18hxdH-S6RPXOy3JuXp_FUDRoElGzWUrI)
+![Basic Analysis](./images/basic_card_data.png)
 
 #### 2. Table Display for Data
-![Table Display](https://drive.google.com/file/d/13n6G6T0RGMXtC_PrVoPNO6FV92wYSa8R/view?usp=drive_link)
+![Table Display](./images/table_display.png)
 
 ## Known Bugs and Issues
 
@@ -22,7 +22,7 @@ In some cases, the unit or metric (e.g., `%` or `m`) disappears from the respons
 ### 3. Karma/Jasmine Environment Bug
 Karma/Jasmine tests fail to load and execute properly in the browser due to an environment-related issue, preventing test runs from completing successfully.
 
----
+
 
 ## Prerequisites
 
@@ -105,9 +105,11 @@ npm install -g @angular/cli
 ### Start the Backend
 
 1. **Run the FastAPI server:**
-
+   
    In the backend directory, start the FastAPI server:
-
+ ```bash
+   cd backend
+   ```
    ```bash
    fastapi dev main.py
    ```
